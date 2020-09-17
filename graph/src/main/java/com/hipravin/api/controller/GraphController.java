@@ -1,6 +1,7 @@
 package com.hipravin.api.controller;
 
 import com.hipravin.api.model.GraphDto;
+import com.hipravin.api.model.LinkDto;
 import com.hipravin.api.model.NodeDto;
 import com.hipravin.api.model.PositionDto;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,13 @@ public class GraphController {
         nodes.add(new NodeDto(1L, PositionDto.of(0.1, 0.2), "Node 1"));
         nodes.add(new NodeDto(2L, PositionDto.of(0.3, 0.4), "Node 2"));
         nodes.add(new NodeDto(3L, PositionDto.of(0.4, 0.7), "Node 3"));
-        GraphDto graphDto = new GraphDto(nodes);
+
+        List<LinkDto> links = new ArrayList<>();
+        links.add(new LinkDto(1L, 2L));
+        links.add(new LinkDto(1L, 3L));
+        links.add(new LinkDto(2L, 3L));
+
+        GraphDto graphDto = new GraphDto(nodes, links);
 
         return ResponseEntity.ok(graphDto);
     }

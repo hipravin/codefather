@@ -1,1 +1,9 @@
 .GraphNode {}
+
+.small {
+    font: italic 13px sans-serif;
+}
+
+.heavy {
+    font: bold 30px sans-serif;
+}

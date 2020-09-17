@@ -12,7 +12,7 @@ class App extends React.Component {
 
         const node1 = {text: 'Default node 1', id: 1};
 
-        this.state = {graph: {nodes: [node1]}};
+        this.state = {graph: {nodes: [], links: []}};
     }
 
     componentDidMount() {
@@ -26,13 +26,20 @@ class App extends React.Component {
 
     render() {
         return (
-            <div className="App">
-                <header className="App-header">
-                    <Graph graph={this.state.graph}/>
+            <div className="diargam">
+                <svg width="1000" height="800" version="1.1" xmlns="http://www.w3.org/2000/svg">
 
-                    <img src={logo} className="App-logo" alt="logo"/>
-                </header>
+
+                    <Graph graph={this.state.graph}/>
+                </svg>
             </div>
+            // <div className="App">
+            //     <header className="App-header">
+            //         <Graph graph={this.state.graph}/>
+            //
+            //         <img src={logo} className="App-logo" alt="logo"/>
+            //     </header>
+            // </div>
         )
     }
 }

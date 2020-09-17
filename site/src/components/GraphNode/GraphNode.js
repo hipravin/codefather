@@ -8,10 +8,23 @@ class GraphNode extends React.Component {
     }
 
     render() {
+
+        const rectid = 'rect' + this.props.id;
+
         return (
-            <div className="GraphNode">
-                Node {this.props.header}
-            </div>
+            <g>
+                <rect id={rectid} x={this.props.x} y={this.props.y} width={this.props.viewparams.nodewidth}
+                      height={this.props.viewparams.nodeheight} stroke="black"
+                      fill="white"
+                      strokeWidth="3"/>
+                <text x={this.props.x + this.props.viewparams.textshiftx} y={this.props.y + this.props.viewparams.textshifty}
+                      className="small">{this.props.header}</text>
+
+            </g>
+
+            // <div className="GraphNode">
+            //     Node {this.props.header}
+            // </div>
         );
     }
 }
