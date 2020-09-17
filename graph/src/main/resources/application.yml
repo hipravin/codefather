@@ -1,0 +1,11 @@
+spring:
+  profiles:
+    active: local
+
+---
+spring:
+  profiles: local
+
+logging:
+  level:
+    org.springframework: DEBUG

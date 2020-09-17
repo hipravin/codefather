@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Graph</title>
+
+    <link href="/main.css" rel="stylesheet">
+    <link href="/bootstrap.min.css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<!-- Navigation -->
+<nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+    <div class="container">
+        <a class="navbar-brand" href="/">
+            Новая игра</a>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+            <ul class="navbar-nav ml-auto">
+                <li class="nav-item">
+                    <a class="nav-link">Сюда потом чего-нибудь добавим</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Page Header -->
+<header class="masthead">
+    <div class="overlay"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-md-10 mx-auto">
+                <div class="site-heading">
+                    <h2>Тут мощный заголовок</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+<div class="diargam">
+    <svg width="1000" height="800" version="1.1" xmlns="http://www.w3.org/2000/svg">
+
+        <rect id="rect1" x="10" y="10" width="30" height="30" stroke="black" fill="transparent" stroke-width="5"/>
+
+
+        <text x="20" y="35" class="small">Мой</text>
+        <text x="60" y="35" class="heavy">кот</text>
+        <text x="60" y="55" class="small">очень</text>
+
+        <text x="100" y="55" class="Rrrrr">Сердит!</text>
+
+        <rect x="60" y="10" rx="10" ry="10" width="30" height="30" stroke="black" fill="transparent" stroke-width="5"/>
+
+        <circle cx="25" cy="75" r="20" stroke="red" fill="transparent" stroke-width="5"/>
+        <ellipse cx="75" cy="75" rx="20" ry="5" stroke="red" fill="transparent" stroke-width="5"/>
+
+        <line x1="10" x2="50" y1="110" y2="150" stroke="orange" fill="transparent" stroke-width="5"/>
+        <polyline points="60 110 65 120 70 115 75 130 80 125 85 140 90 135 95 150 100 145"
+                  stroke="orange" fill="transparent" stroke-width="5"/>
+
+        <polygon points="50 160 55 180 70 180 60 190 65 205 50 195 35 205 40 190 30 180 45 180"
+                 stroke="green" fill="transparent" stroke-width="5"/>
+
+        <path d="M20,230 Q40,205 50,230 T90,230" fill="none" stroke="blue" stroke-width="5"/>
+    </svg>
+</div>
+
+
+<div class="container">
+    <div class="row">
+        <div class="col-lg-2 col-md-2">
+        </div>
+        <div class="col-lg-6 col-md-6">
+            <table id="board" class="board">
+
+
+            </table>
+
+
+        </div>
+        <div class="col-lg-4 col-md-4">
+            <h3 id="gamestatus"></h3>
+
+            <p>
+
+
+            </p>
+        </div>
+
+
+    </div>
+</div>
+
+
+<script src="/jquery.min.js"></script>
+<script src="/main.js"></script>
+
+
+</body>
+
+</html>
