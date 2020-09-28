@@ -6,6 +6,7 @@ import Graph from "./components/Graph/Graph";
 
 class App extends React.Component {
     apiBase = 'http://localhost:8080/api/v1/';
+    tick = 0;
 
     constructor(props) {
         super(props);
@@ -16,12 +17,23 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        axios.get(this.apiBase + 'graph/sample')
-            .then(res => {
-                console.log('Got graph: ' + JSON.stringify(res));
-                const graph = res.data;
-                this.setState({ graph: graph });
-            })
+
+        setInterval(() => {
+            axios.get(this.apiBase + 'graph/test/animated/' + this.tick)
+                .then(res => {
+                    console.log('Got graph: ' + JSON.stringify(res));
+                    const graph = res.data.graph;
+                    this.setState({ graph: graph });
+                    this.tick = res.data.tick + 1;
+                });
+        }, 50);
+
+        // axios.get(this.apiBase + 'graph/sample')
+        //     .then(res => {
+        //         console.log('Got graph: ' + JSON.stringify(res));
+        //         const graph = res.data;
+        //         this.setState({ graph: graph });
+        //     });
     }
 
     render() {

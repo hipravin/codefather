@@ -14,9 +14,17 @@ class Graph extends React.Component {
         nodeheight: 30
     };
 
+    xshift = 0;
 
     constructor(props) {
         super(props);
+    }
+
+    componentDidMount() {
+        // setInterval(() => {
+        //     this.xshift++;
+        //     this.forceUpdate();
+        // }, 50);
     }
 
     render() {
@@ -33,7 +41,7 @@ class Graph extends React.Component {
         const nodes = this.props.graph.nodes.map(node => {
                 const np = this.nodeScreenPosition(node);
 
-                return <GraphNode header={node.text} key={node.id} id={node.id} x={np.x} y={np.y}
+                return <GraphNode header={node.text} key={node.id} id={node.id} x={np.x + this.xshift} y={np.y}
                                   viewparams={this.viewparams}/>;
             }
         );

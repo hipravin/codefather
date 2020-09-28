@@ -6,7 +6,6 @@ public class GraphDto {
     private List<NodeDto> nodes;
     private List<LinkDto> links;
 
-
     public GraphDto(List<NodeDto> nodes, List<LinkDto> links) {
         this.nodes = nodes;
         this.links = links;

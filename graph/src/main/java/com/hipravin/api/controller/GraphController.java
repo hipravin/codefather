@@ -1,37 +1,45 @@
 package com.hipravin.api.controller;
 
-import com.hipravin.api.model.GraphDto;
-import com.hipravin.api.model.LinkDto;
-import com.hipravin.api.model.NodeDto;
-import com.hipravin.api.model.PositionDto;
+import com.hipravin.api.model.*;
+import com.hipravin.engine.GraphBuildService;
+import com.hipravin.engine.GraphNotFoundException;
+import com.hipravin.engine.GraphSimulationService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/v1/graph")
 public class GraphController {
+    private final Logger logger = LoggerFactory.getLogger(GraphController.class);
+
+    private final GraphBuildService graphBuildService;
+    private final GraphSimulationService graphSimulationService;
+
+    public GraphController(GraphBuildService graphBuildService, GraphSimulationService graphSimulationService) {
+        this.graphBuildService = graphBuildService;
+        this.graphSimulationService = graphSimulationService;
+    }
 
     @GetMapping("/sample")
     ResponseEntity<GraphDto> graphSample() {
+        return ResponseEntity.ok(graphBuildService.sampleGraph());
 
-        List<NodeDto> nodes = new ArrayList<>();
+    }
 
-        nodes.add(new NodeDto(1L, PositionDto.of(0.1, 0.2), "Node 1"));
-        nodes.add(new NodeDto(2L, PositionDto.of(0.3, 0.4), "Node 2"));
-        nodes.add(new NodeDto(3L, PositionDto.of(0.4, 0.7), "Node 3"));
+    @GetMapping("/{graphid}/simulation/{tick}")
+    ResponseEntity<GraphAnimationDto> graphAnimation(@PathVariable("graphid") String graphid, @PathVariable("tick") long tick) {
+        return ResponseEntity.ok(graphSimulationService.computeGraphSimulationTick(graphid, tick));
+    }
 
-        List<LinkDto> links = new ArrayList<>();
-        links.add(new LinkDto(1L, 2L));
-        links.add(new LinkDto(1L, 3L));
-        links.add(new LinkDto(2L, 3L));
+    @ExceptionHandler
+    ResponseEntity<?> handleGraphNotFound(GraphNotFoundException e) {
+        logger.warn(e.getMessage(), e);
 
-        GraphDto graphDto = new GraphDto(nodes, links);
-
-        return ResponseEntity.ok(graphDto);
+        return new ResponseEntity<Object>("graph not found", new HttpHeaders(), HttpStatus.NOT_FOUND);
+//        return ResponseEntity.notFound().build();
     }
 }
