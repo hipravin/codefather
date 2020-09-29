@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 @Service
 public class GraphBuildService {
@@ -26,6 +29,10 @@ public class GraphBuildService {
         switch (id) {
             case "sample-1":
                 return buildSample1();
+            case "sample-r50":
+                return buildRandom(50, 0.01);
+            case "sample-r100":
+                return buildRandom(100, 0.01);
             default:
                 throw new GraphNotFoundException("Can't find sample graph definition for: " + id);
         }
@@ -49,6 +56,33 @@ public class GraphBuildService {
         graph.getNodesMetadata().put(node1, new Metadata(1, "Node 1"));
         graph.getNodesMetadata().put(node2, new Metadata(2, "Node 2"));
         graph.getNodesMetadata().put(node3, new Metadata(3, "Node 3"));
+
+        return graph;
+    }
+
+    private Graph buildRandom(int nodeCount, double linkProbability) {
+        Random random = new Random();
+        Graph graph = new Graph();
+        List<GraphNode> nodes = Stream.generate(() -> new GraphNode(new ArrayList<>()))
+                .limit(nodeCount)
+                .collect(Collectors.toList());
+
+        nodes.forEach(n -> graph.getNodes().add(n));
+
+        for (int i = 0; i < nodes.size(); i++) {
+             GraphNode node = nodes.get(i);
+             graph.getNodesMetadata().put(node, new Metadata(i, "Node " + i));
+        }
+
+        for (GraphNode node1 : nodes) {
+            for (GraphNode node2 : nodes) {
+                if(node1 != node2) {
+                    if(random.nextDouble() < linkProbability) {
+                        node1.getLinks().add(new GraphLink(node2));
+                    }
+                }
+            }
+        }
 
         return graph;
     }

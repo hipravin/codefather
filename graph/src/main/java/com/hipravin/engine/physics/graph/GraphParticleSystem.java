@@ -53,9 +53,19 @@ public class GraphParticleSystem implements MovableParticleSystem {
             Vector2d newSpeed = NewtonPhysics.accelerate(p.getSpeed(), acceleration, dt);
             Point2d newPosition = NewtonPhysics.move(p.getLocation(), newSpeed, dt);
 
-            p.setLocation(newPosition);
+            p.setLocation(enforceEdge(newPosition));
             p.setSpeed(newSpeed);
         });
+    }
+
+    private static Point2d enforceEdge(Point2d p) {
+        double x = Math.max(GraphPhysicParams.X_MIN, p.getX());
+        x = Math.min(GraphPhysicParams.Y_MAX, x);
+
+        double y = Math.max(GraphPhysicParams.Y_MIN, p.getY());
+        y = Math.min(GraphPhysicParams.Y_MAX, y);
+
+        return new Point2d(x, y);
     }
 
     private static Point2d randomLocation(Random random) {

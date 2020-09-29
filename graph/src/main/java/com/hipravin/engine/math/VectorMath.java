@@ -1,5 +1,7 @@
 package com.hipravin.engine.math;
 
+import com.hipravin.engine.physics.graph.GraphPhysicParams;
+
 import java.util.Arrays;
 
 public final class VectorMath {
@@ -32,23 +34,29 @@ public final class VectorMath {
     }
 
     public static Vector2d divide(Vector2d v, double scale) {
-        return new Vector2d(v.getDx() / scale, v.getDy() / scale);
+        if(Math.abs(scale) < GraphPhysicParams.ZERO_DOUBLE) {
+            return v;
+        } else {
+            return new Vector2d(v.getDx() / scale, v.getDy() / scale);
+        }
     }
 
     public static Point2d move(Point2d p, Vector2d v) {
         return new Point2d(p.getX() + v.getDx(), p.getY() + v.getDy());
     }
 
-    public static final double lenght(Vector2d v) {
+    public static double lenght(Vector2d v) {
         return Math.hypot(v.getDx(), v.getDy());
     }
 
     public static Vector2d normalize(Vector2d v) {
-        if (v.getDx() == 0 && v.getDy() == 0) {//for explicitely initialized zero vectors
+        double len = lenght(v);
+        if (len < GraphPhysicParams.ZERO_DOUBLE) {
             return v;
         }
 
-        return mul(v, 1 / lenght(v));
+        Vector2d res = mul(v, 1 / len);
+        return res;
     }
 
     public static Vector2d vectorBetweenPoints(Point2d p1, Point2d p2) {

@@ -6,8 +6,8 @@ import GraphLink from "../GraphLink/GraphLink";
 
 class Graph extends React.Component {
     viewparams = {
-        maxwidth: 1000,
-        maxheight: 800,
+        maxwidth: 1600,
+        maxheight: 900,
         textshiftx: 5,
         textshifty: 20,
         nodewidth: 150,

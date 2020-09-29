@@ -6,6 +6,7 @@ import Graph from "./components/Graph/Graph";
 
 class App extends React.Component {
     apiBase = 'http://localhost:8080/api/v1/';
+
     tick = 0;
 
     constructor(props) {
@@ -19,7 +20,9 @@ class App extends React.Component {
     componentDidMount() {
 
         setInterval(() => {
-            axios.get(this.apiBase + 'graph/test/animated/' + this.tick)
+            // var graphId = 'sample-1';
+            var graphId = 'sample-r100';
+            axios.get(this.apiBase + `graph/${graphId}/simulation/` + this.tick)
                 .then(res => {
                     console.log('Got graph: ' + JSON.stringify(res));
                     const graph = res.data.graph;
@@ -38,12 +41,11 @@ class App extends React.Component {
 
     render() {
         return (
-            <div className="diargam">
-                <svg width="1000" height="800" version="1.1" xmlns="http://www.w3.org/2000/svg">
-
-
+            <div>
+                <svg className = "diagram" width="1600" height="900" version="1.1" xmlns="http://www.w3.org/2000/svg">
                     <Graph graph={this.state.graph}/>
                 </svg>
+                <p>Tick: {this.tick}</p>
             </div>
             // <div className="App">
             //     <header className="App-header">

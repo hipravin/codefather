@@ -11,7 +11,8 @@ public class GraphPhysicsConfig {
     @Bean
     GraphPhysicsRules commonGraphRules() {
         GraphPhysicsInteractionBuilder physicsInteractionBuilder = new GraphPhysicsInteractionBuilder()
-                .withEdgeSquareRepulsion();
+                .withEdgeRepulsion()
+                .withPairwiseSquareRepulsion();
 
         return physicsInteractionBuilder.build();
     }
