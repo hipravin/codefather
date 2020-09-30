@@ -22,11 +22,10 @@ class GraphControllerTest {
     @Autowired
     TestRestTemplate testRestTemplate;
 
-
     @Test
     void testSimulation() {
         String graphId = "sample-r100";
-        int iterations = 1000;
+        int iterations = 10;
 
         Instant start = Instant.now();
 

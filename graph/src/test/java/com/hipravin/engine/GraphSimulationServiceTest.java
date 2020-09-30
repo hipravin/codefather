@@ -3,6 +3,7 @@ package com.hipravin.engine;
 import com.hipravin.api.model.GraphAnimationDto;
 import com.hipravin.engine.physics.graph.GraphParticleSystem;
 import com.hipravin.engine.physics.graph.GraphPhysicParams;
+import com.hipravin.engine.physics.graph.GraphPhysicSimulation;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,8 +26,10 @@ class GraphSimulationServiceTest {
 //        graphSimulationService.computeGraphSimulationTick(random100, 0);
         Instant start = Instant.now();
 
+        GraphPhysicSimulation simulation = graphSimulationService.buildSimulationById(random100);
+
         for (int tick = 0; tick < iterations; tick++) {
-            GraphAnimationDto dto = graphSimulationService.computeGraphSimulationTick(random100, tick);
+            GraphAnimationDto dto = graphSimulationService.advanceSimulationToTick(simulation, tick);
             ensureWithinEdges(dto, tick);
         }
         System.out.println("Total: " + Duration.between(start, Instant.now()));

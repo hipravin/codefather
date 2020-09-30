@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 @Service
 public class GraphBuildService {
     public Graph buildOrFindGraph(String id) {
-        if(id.startsWith("sample-")) {
+        if (id.startsWith("sample-")) {
             return buildSampleGraph(id);
         }
 
@@ -30,9 +30,9 @@ public class GraphBuildService {
             case "sample-1":
                 return buildSample1();
             case "sample-r50":
-                return buildRandom(50, 0.01);
+                return buildRandom(50, 0.02);
             case "sample-r100":
-                return buildRandom(100, 0.01);
+                return buildRandom(100, 0.02);
             default:
                 throw new GraphNotFoundException("Can't find sample graph definition for: " + id);
         }
@@ -70,19 +70,45 @@ public class GraphBuildService {
         nodes.forEach(n -> graph.getNodes().add(n));
 
         for (int i = 0; i < nodes.size(); i++) {
-             GraphNode node = nodes.get(i);
-             graph.getNodesMetadata().put(node, new Metadata(i, "Node " + i));
+            GraphNode node = nodes.get(i);
+            graph.getNodesMetadata().put(node, new Metadata(i, "Node " + i));
         }
 
-        for (GraphNode node1 : nodes) {
-            for (GraphNode node2 : nodes) {
-                if(node1 != node2) {
-                    if(random.nextDouble() < linkProbability) {
+        for (int i = 0; i < nodes.size() / 2; i++) {
+            for (int j = 0; j < nodes.size() / 2; j++) {
+                if (i != j) {
+                    GraphNode node1 = nodes.get(i);
+                    GraphNode node2 = nodes.get(j);
+
+                    if (random.nextDouble() < linkProbability) {
                         node1.getLinks().add(new GraphLink(node2));
                     }
                 }
             }
         }
+        for (int i = nodes.size() / 2 + 1; i < nodes.size(); i++) {
+            for (int j = nodes.size() / 2 + 1; j < nodes.size(); j++) {
+                if (i != j) {
+                    GraphNode node1 = nodes.get(i);
+                    GraphNode node2 = nodes.get(j);
+
+                    if (random.nextDouble() < linkProbability) {
+                        node1.getLinks().add(new GraphLink(node2));
+                    }
+                }
+            }
+        }
+
+
+//        for (GraphNode node1 : nodes) {
+//            for (GraphNode node2 : nodes) {
+//                if (node1 != node2) {
+//                    if (random.nextDouble() < linkProbability) {
+//                        node1.getLinks().add(new GraphLink(node2));
+//                    }
+//                }
+//            }
+//        }
 
         return graph;
     }
@@ -99,10 +125,10 @@ public class GraphBuildService {
             for (NodeDto node : sampleGraph.getNodes()) {
                 node.getPosition().setX(node.getPosition().getX() + delta);
                 node.getPosition().setY(node.getPosition().getY() + delta);
-                if(node.getPosition().getX() > 1) {
+                if (node.getPosition().getX() > 1) {
                     node.getPosition().setX(0.1);
                 }
-                if(node.getPosition().getY() > 1) {
+                if (node.getPosition().getY() > 1) {
                     node.getPosition().setY(0.1);
                 }
             }

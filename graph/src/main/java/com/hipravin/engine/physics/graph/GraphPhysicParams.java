@@ -21,6 +21,10 @@ public abstract class GraphPhysicParams {
     public static final double EDGE_REPULSION_COEFF = 0.01 * 0.3;
     public static final double PAIRWISE_REPULSION_COEFF = 0.01 * 0.1;
 
+    public static final double LINK_LEN = 0.05;//if distance is greater than this then linked particles are forced towards
+    public static final double LINK_GUK_COEFF = 500;
+
+    public static final double VISCOSITY_COEFF = 250;
 
     public static long MICROTICKS_PER_TICK = 10;
     public static long TICK_PER_SECOND = 60;

@@ -8,6 +8,7 @@ class App extends React.Component {
     apiBase = 'http://localhost:8080/api/v1/';
 
     tick = 0;
+    callInProgress = false;
 
     constructor(props) {
         super(props);
@@ -22,13 +23,16 @@ class App extends React.Component {
         setInterval(() => {
             // var graphId = 'sample-1';
             var graphId = 'sample-r100';
-            axios.get(this.apiBase + `graph/${graphId}/simulation/` + this.tick)
-                .then(res => {
-                    console.log('Got graph: ' + JSON.stringify(res));
-                    const graph = res.data.graph;
-                    this.setState({ graph: graph });
-                    this.tick = res.data.tick + 1;
-                });
+            if(!this.callInProgress) {
+                axios.get(this.apiBase + `graph/${graphId}/simulation/` + this.tick)
+                    .then(res => {
+                        console.log('Got graph: ' + JSON.stringify(res));
+                        const graph = res.data.graph;
+                        this.setState({graph: graph});
+                        this.tick = res.data.tick + 1;
+                        this.callInProgress = false;
+                    });
+            }
         }, 50);
 
         // axios.get(this.apiBase + 'graph/sample')
