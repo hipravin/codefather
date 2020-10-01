@@ -24,7 +24,7 @@ class GraphControllerTest {
 
     @Test
     void testSimulation() {
-        String graphId = "sample-r100";
+        String graphId = "sample-r120";
         int iterations = 10;
 
         Instant start = Instant.now();
@@ -32,12 +32,16 @@ class GraphControllerTest {
         for (int tick = 0; tick < iterations; tick++) {
             String url = "http://localhost:" + port + "/api/v1/graph/" + graphId + "/simulation/" + tick;
             ResponseEntity<GraphAnimationDto> simulationResponse = testRestTemplate.getForEntity(url, GraphAnimationDto.class);
+            ResponseEntity<String> simulationStringResponse = testRestTemplate.getForEntity(url, String.class);
+
+            System.out.println(simulationStringResponse.getBody());
 
             assertNotNull(simulationResponse.getBody());
-            assertEquals(100, simulationResponse.getBody().getGraph().getNodes().size());
+            assertEquals(120, simulationResponse.getBody().getGraph().getNodes().size());
         }
         System.out.println("Total: " + Duration.between(start, Instant.now()));
         System.out.println("Average: " + Duration.between(start, Instant.now()).dividedBy(iterations));
 
     }
+
 }

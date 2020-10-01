@@ -24,7 +24,7 @@ public class GraphPhysicRulesCompositionImpl implements GraphPhysicsRules {
     }
 
     @Override
-    public Map<MassiveMovableParticle, Force> computeForces(Collection<MassiveMovableParticle> particles, Collection<WeightedParticleLink> links) {
+    public Map<MassiveMovableParticle, Force> computeForces(List<MassiveMovableParticle> particles, List<WeightedParticleLink> links) {
         Map<MassiveMovableParticle, Force> forcesSummarized = new IdentityHashMap<>();
 
         //single particle
@@ -37,15 +37,24 @@ public class GraphPhysicRulesCompositionImpl implements GraphPhysicsRules {
         //two particles
         //this might require optimization if particle count if greater than 100
         //however such amount is hard to display
-        for (MassiveMovableParticle particle1 : particles) {
-            for (MassiveMovableParticle particle2 : particles) {
-                if(particle1 != particle2) {
-                    for (TwoParticleGenericPhysicRule twoParticlePhysicRule : twoParticlePhysicRules) {
-                        mergeForcesMaps(forcesSummarized, twoParticlePhysicRule.computeForceComponents(particle1, particle2));
-                    }
+        for (int i = 0; i < particles.size(); i++) {
+            MassiveMovableParticle particle1 = particles.get(i);
+            for (int j = i + 1; j < particles.size(); j++) {
+                MassiveMovableParticle particle2 = particles.get(j);
+                for (TwoParticleGenericPhysicRule twoParticlePhysicRule : twoParticlePhysicRules) {
+                    mergeForcesMaps(forcesSummarized, twoParticlePhysicRule.computeForceComponents(particle1, particle2));
                 }
             }
         }
+//        for (MassiveMovableParticle particle1 : particles) {
+//            for (MassiveMovableParticle particle2 : particles) {
+//                if(particle1 != particle2) {
+//                    for (TwoParticleGenericPhysicRule twoParticlePhysicRule : twoParticlePhysicRules) {
+//                        mergeForcesMaps(forcesSummarized, twoParticlePhysicRule.computeForceComponents(particle1, particle2));
+//                    }
+//                }
+//            }
+//        }
         //link rules
         for (LinkedParticlesPhysicRule linkedParticlesRule : linkedParticlesRules) {
             for (WeightedParticleLink weightedParticleLink : links) {

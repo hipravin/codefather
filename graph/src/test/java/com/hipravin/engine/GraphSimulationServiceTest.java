@@ -23,7 +23,6 @@ class GraphSimulationServiceTest {
         String random100 = "sample-r100";
         int iterations = 100;
 
-//        graphSimulationService.computeGraphSimulationTick(random100, 0);
         Instant start = Instant.now();
 
         GraphPhysicSimulation simulation = graphSimulationService.buildSimulationById(random100);

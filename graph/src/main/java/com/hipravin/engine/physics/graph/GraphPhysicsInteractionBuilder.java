@@ -10,9 +10,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+import static com.hipravin.engine.physics.graph.GraphPhysicParams.EDGE_REPULSION_BOUNDARY;
+
 public class GraphPhysicsInteractionBuilder {
     private List<SingleParticleGenericPhysicRule> singleParticleRules = new ArrayList<>();
     private List<TwoParticleGenericPhysicRule> twoParticlePhysicRules = new ArrayList<>();
+    private List<TwoParticleGenericPhysicRule> twoParticleOnlyClosestRules = new ArrayList<>();
     private List<LinkedParticlesPhysicRule> linkedParticlesPhysicRules = new ArrayList<>();
 
     public GraphPhysicsInteractionBuilder withMediumViscosity() {
@@ -32,7 +35,7 @@ public class GraphPhysicsInteractionBuilder {
             Vector2d location12 = VectorMath.vectorBetweenPoints(l.getParticleFrom().getLocation(), l.getParticleTo().getLocation());
             double lenDelta = VectorMath.lenght(location12) - GraphPhysicParams.LINK_LEN;
             if (lenDelta > 0) {
-                Vector2d f1 = VectorMath.mul(location12, GraphPhysicParams.LINK_GUK_COEFF * lenDelta);
+                Vector2d f1 = VectorMath.mul(location12, GraphPhysicParams.LINK_GUK_COEFF * lenDelta * l.getWeight());
                 Vector2d f2 = VectorMath.negate(f1);
 
                 return Map.of(
@@ -58,7 +61,6 @@ public class GraphPhysicsInteractionBuilder {
                 distance -> GraphPhysicParams.EDGE_REPULSION_COEFF / (distance * distance * distance));//cube
     }
 
-
     public GraphPhysicsInteractionBuilder withPairwiseSquareRepulsion() {
         twoParticlePhysicRules.add((p1, p2) -> {
             Vector2d location12 = VectorMath.vectorBetweenPoints(p1.getLocation(), p2.getLocation());
@@ -69,11 +71,11 @@ public class GraphPhysicsInteractionBuilder {
             } else {
                 double f = p1.getMass() * p2.getMass() * GraphPhysicParams.PAIRWISE_REPULSION_COEFF / (distance * distance);
 
-                Vector2d f1 = VectorMath.mul(VectorMath.normalize(location12), f);
+                Vector2d vf1 = VectorMath.mul(VectorMath.normalize(location12), f);
 
-                Force repulsion = new Force(VectorMath.negate(f1));
-
-                return Collections.singletonMap(p1, repulsion);
+                return Map.of(
+                        p1, new Force(VectorMath.negate(vf1)),
+                        p2, new Force(vf1));
             }
         });
 
@@ -84,54 +86,38 @@ public class GraphPhysicsInteractionBuilder {
      * @param repulsionAcceleration acceleration that increases when particle gets closer to the edge
      */
     GraphPhysicsInteractionBuilder withEdgeRepulsionAcceleration(double xleft, double xright, double ymin, double ymax, Function<Double, Double> repulsionAcceleration) {
-        //left
+        //left-right
         singleParticleRules.add(particle -> {
             double toLeftEdge = particle.getLocation().getX() - xleft;
-            if (toLeftEdge > 0) {
-                double dx = particle.getMass() * repulsionAcceleration.apply(toLeftEdge);
-
-                return new Force(new Vector2d(dx, 0));
+            double fromRightEdge = particle.getLocation().getX() - xright;
+            if (toLeftEdge > 0 && fromRightEdge < 0
+                    && Math.min(toLeftEdge, -fromRightEdge) < (xright - xleft) * EDGE_REPULSION_BOUNDARY
+            ) {
+                return (toLeftEdge < -fromRightEdge)
+                        ? new Force(new Vector2d(particle.getMass() * repulsionAcceleration.apply(toLeftEdge), 0))
+                        : new Force(new Vector2d(-particle.getMass() * repulsionAcceleration.apply(-fromRightEdge), 0));
             } else {
                 return new Force(new Vector2d(0, 0));
             }
         });
-        //right
-        singleParticleRules.add(particle -> {
-            double toRightEdge = xright - particle.getLocation().getX();
-            if (toRightEdge > 0) {
-                double dx = particle.getMass() * repulsionAcceleration.apply(toRightEdge);
-
-                return new Force(new Vector2d(-dx, 0));
-            } else {
-                return new Force(new Vector2d(0, 0));
-            }
-        });
-        //top
+        //top-bottom
         singleParticleRules.add(particle -> {
             double toTopEdge = particle.getLocation().getY() - ymin;
-            if (toTopEdge > 0) {
-                double dy = particle.getMass() * repulsionAcceleration.apply(toTopEdge);
-
-                return new Force(new Vector2d(0, dy));
+            double fromBottomEdge = particle.getLocation().getY() - ymax;
+            if (toTopEdge > 0 && fromBottomEdge < 0
+                    && Math.min(toTopEdge, -fromBottomEdge) < (ymax - ymin) * EDGE_REPULSION_BOUNDARY
+            ) {
+                return (toTopEdge < -fromBottomEdge)
+                        ? new Force(new Vector2d(0, particle.getMass() * repulsionAcceleration.apply(toTopEdge)))
+                        : new Force(new Vector2d(0, -particle.getMass() * repulsionAcceleration.apply(-fromBottomEdge)));
             } else {
                 return new Force(new Vector2d(0, 0));
             }
         });
-        //bottom
-        singleParticleRules.add(particle -> {
-            double toBottomEdge = ymax - particle.getLocation().getY();
-            if (toBottomEdge > 0) {
-                double dy = particle.getMass() * repulsionAcceleration.apply(toBottomEdge);
-
-                return new Force(new Vector2d(0, -dy));
-            } else {
-                return new Force(new Vector2d(0, 0));
-            }
-        });
-
 
         return this;
     }
+
 
     public GraphPhysicsInteractionBuilder withRule(SingleParticleGenericPhysicRule rule) {
         singleParticleRules.add(rule);

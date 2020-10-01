@@ -22,8 +22,9 @@ class App extends React.Component {
 
         setInterval(() => {
             // var graphId = 'sample-1';
-            var graphId = 'sample-r100';
+            var graphId = 'sample-r120';
             if(!this.callInProgress) {
+                this.callInProgress = true;//well, that's definitely not atomic
                 axios.get(this.apiBase + `graph/${graphId}/simulation/` + this.tick)
                     .then(res => {
                         console.log('Got graph: ' + JSON.stringify(res));

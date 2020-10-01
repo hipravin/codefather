@@ -39,10 +39,10 @@ class Graph extends React.Component {
             }
         );
         const nodes = this.props.graph.nodes.map(node => {
-                const np = this.nodeScreenPosition(node);
+                const np = this.nodeLeftTopCornerPosition(node);
 
                 return <GraphNode header={node.text} key={node.id} id={node.id} x={np.x + this.xshift} y={np.y}
-                                  viewparams={this.viewparams}/>;
+                                  viewparams={this.viewparams} scale={node.weight}/>;
             }
         );
 
@@ -54,9 +54,9 @@ class Graph extends React.Component {
         );
     }
 
-    nodeScreenPosition(node) {
-        const x = this.viewparams.maxwidth * node.position.x;
-        const y = this.viewparams.maxheight * node.position.y;
+    nodeLeftTopCornerPosition(node) {
+        const x = this.viewparams.maxwidth * node.position.x - this.viewparams.nodewidth / 2;
+        const y = this.viewparams.maxheight * node.position.y - this.viewparams.nodeheight / 2;
 
         return {"x": x, "y": y};
     }
@@ -65,10 +65,7 @@ class Graph extends React.Component {
         const x = this.viewparams.maxwidth * node.position.x;
         const y = this.viewparams.maxheight * node.position.y;
 
-        const xcenter = this.viewparams.nodewidth / 2 + x;
-        const ycenter = this.viewparams.nodeheight / 2 + y;
-
-        return {"x": xcenter, "y": ycenter};
+        return {"x": x, "y": y};
     }
 }
 

@@ -26,9 +26,9 @@ public class GraphPhysicSimulation {
 
         for (GraphNode graphNode : graph.getNodes()) {
             Metadata nodeMetadata = graph.getNodesMetadata().get(graphNode);
-            NodeDto nodeDto = new NodeDto(nodeMetadata.getId(),
+            NodeDto nodeDto = new WeightedNodeDto(nodeMetadata.getId(),
                     DtoMappingUtil.toPositionDto(graphParticleSystem.getGraphNodeLocation(graphNode)),
-                    nodeMetadata.getText());
+                    nodeMetadata.getText(), graphNode.getWeight());
 
             nodes.add(nodeDto);
 

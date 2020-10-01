@@ -33,6 +33,8 @@ public class GraphBuildService {
                 return buildRandom(50, 0.02);
             case "sample-r100":
                 return buildRandom(100, 0.02);
+            case "sample-r120":
+                return buildRandom(120, 0.02);
             default:
                 throw new GraphNotFoundException("Can't find sample graph definition for: " + id);
         }
@@ -64,6 +66,7 @@ public class GraphBuildService {
         Random random = new Random();
         Graph graph = new Graph();
         List<GraphNode> nodes = Stream.generate(() -> new GraphNode(new ArrayList<>()))
+                .peek(gn -> gn.setWeight(random.nextDouble() * 0.5 + 0.8))
                 .limit(nodeCount)
                 .collect(Collectors.toList());
 

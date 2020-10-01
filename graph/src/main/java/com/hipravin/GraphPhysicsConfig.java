@@ -14,7 +14,8 @@ public class GraphPhysicsConfig {
                 .withMediumViscosity()
                 .withEdgeRepulsion()
                 .withLinkGravity()
-                .withPairwiseSquareRepulsion();
+                .withPairwiseSquareRepulsion()
+                ;
 
         return physicsInteractionBuilder.build();
     }

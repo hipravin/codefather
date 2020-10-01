@@ -6,6 +6,9 @@ public class NodeDto {
     private PositionDto position;
     private String text;
 
+    public NodeDto() {
+    }
+
     public NodeDto(Long id, PositionDto position, String text) {
         this.id = id;
         this.position = position;

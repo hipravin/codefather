@@ -10,11 +10,11 @@ class GraphNode extends React.Component {
     render() {
 
         const rectid = 'rect' + this.props.id;
-
+        const scale = (typeof this.props.scale !== 'undefined') ? this.props.scale : 1.0;
         return (
             <g>
-                <rect id={rectid} x={this.props.x} y={this.props.y} width={this.props.viewparams.nodewidth}
-                      height={this.props.viewparams.nodeheight} stroke="black"
+                <rect id={rectid} x={this.props.x} y={this.props.y} width={this.props.viewparams.nodewidth * scale}
+                      height={this.props.viewparams.nodeheight * scale} stroke="black"
                       fill="transparent"
                       strokeWidth="3"/>
                 <text x={this.props.x + this.props.viewparams.textshiftx} y={this.props.y + this.props.viewparams.textshifty}

@@ -18,11 +18,12 @@ public abstract class GraphPhysicParams {
     public static final double X_MAX_INIT = 0.8;
     public static final double Y_MAX_INIT = 0.8;
 
-    public static final double EDGE_REPULSION_COEFF = 0.01 * 0.3;
+    public static final double EDGE_REPULSION_BOUNDARY = 0.2; //if len from edge is greater than value * width then edge is not considered
+    public static final double EDGE_REPULSION_COEFF = 0.01 * 0.05;
     public static final double PAIRWISE_REPULSION_COEFF = 0.01 * 0.1;
 
     public static final double LINK_LEN = 0.05;//if distance is greater than this then linked particles are forced towards
-    public static final double LINK_GUK_COEFF = 500;
+    public static final double LINK_GUK_COEFF = 50;
 
     public static final double VISCOSITY_COEFF = 250;
 
