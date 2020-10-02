@@ -20,8 +20,9 @@ class GraphSimulationServiceTest {
 
     @Test
     void testSimulate() {
-        String graphId = "sample-chess";
-//        String random100 = "sample-r100";
+//        String graphId = "sample-chess";
+//        String graphId = "sample-r120";
+        String graphId = "sample-spring-core";
         int iterations = 100;
 
         Instant start = Instant.now();

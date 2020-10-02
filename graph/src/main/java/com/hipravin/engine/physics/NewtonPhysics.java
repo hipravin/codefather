@@ -30,6 +30,12 @@ public final class NewtonPhysics {
         return new Force(summarizedVector);
     }
 
+    public static Force sumOfForces(Force f1, Force f2) {
+        Vector2d summarizedVector = VectorMath.sum(f1.getValue(), f2.getValue());
+
+        return new Force(summarizedVector);
+    }
+
     public static Force negateForceVector(Force force) {
         return new Force(VectorMath.negate(force.getValue()));
     }

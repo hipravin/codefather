@@ -7,15 +7,15 @@ import com.hipravin.engine.model.GraphLink;
 import com.hipravin.engine.model.GraphNode;
 import com.hipravin.engine.model.Metadata;
 
-import java.util.ArrayList;
-import java.util.IdentityHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public class ParametrizedClassGraphToGraphMapper implements ClassGraphToGraphMapper {
 
     private boolean includeNonProjectClasses = false;
-
+    private int maxClasses = 120;
 
     @Override
     public Graph map(ClassGraph classGraph) {
@@ -24,8 +24,19 @@ public class ParametrizedClassGraphToGraphMapper implements ClassGraphToGraphMap
         Map<ClassGraphNode, GraphNode> nodeMapping = new IdentityHashMap<>();
         AtomicLong idCounter = new AtomicLong(0L);
 
+        Set<ClassGraphNode> nodesByComplexity = new TreeSet<>(
+                Comparator.comparingLong(ClassGraphNode::getCodeComplexity).reversed()
+                        .thenComparing(o -> o.getNameAndPackage().getClassName()));
+
+        nodesByComplexity.addAll(classGraph.getNodes());
+
+        Supplier<Stream<ClassGraphNode>> nodesFilteredStreamSupplier = () ->
+                nodesByComplexity.stream()
+                        .limit(maxClasses)
+                        .filter(cgn -> includeNonProjectClasses || cgn.isProjectClass());
+
         //map nodes
-        classGraph.getNodes().stream().filter(cgn -> includeNonProjectClasses || cgn.isProjectClass())
+        nodesFilteredStreamSupplier.get()
                 .forEach(cgn -> {
                     GraphNode gn = new GraphNode(nodeWeight(cgn), new ArrayList<>());
                     result.getNodes().add(gn);
@@ -35,16 +46,17 @@ public class ParametrizedClassGraphToGraphMapper implements ClassGraphToGraphMap
                     nodeMapping.put(cgn, gn);
                 });
 
-
         //map links
-        classGraph.getNodes().stream().filter(cgn -> includeNonProjectClasses || cgn.isProjectClass())
+        nodesFilteredStreamSupplier.get()
                 .forEach(cgn -> {
                     GraphNode gn = nodeMapping.get(cgn);
                     if (gn != null) {
                         cgn.getLinks().forEach((link, value) -> {
                             if(includeNonProjectClasses || link.isProjectClass()) {
                                 GraphNode gnTo = nodeMapping.get(link);
-                                gn.getLinks().add(new GraphLink(linkWeight(value), gnTo));
+                                if(gnTo != null) {
+                                    gn.getLinks().add(new GraphLink(linkWeight(value), gnTo));
+                                }
                             }
                         });
                     }
@@ -54,7 +66,11 @@ public class ParametrizedClassGraphToGraphMapper implements ClassGraphToGraphMap
     }
 
     private double nodeWeight(ClassGraphNode classGraphNode) {
-        return 1.0;//TODO: stub
+        long complexity = classGraphNode.getCodeComplexity();
+
+        return complexity < 1000
+                ? 1.0
+                : Math.min(2.0, Math.sqrt(complexity / 1000.0));
     }
 
     private double linkWeight(Long relCount) {

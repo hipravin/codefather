@@ -5,9 +5,7 @@ import com.hipravin.engine.physics.MassiveMovableParticle;
 import com.hipravin.engine.physics.NewtonPhysics;
 import com.hipravin.engine.physics.WeightedParticleLink;
 
-import java.util.IdentityHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class GraphPhysicRulesCompositionImpl implements GraphPhysicsRules {
     private List<SingleParticleGenericPhysicRule> singleParticleRules;
@@ -30,7 +28,7 @@ public class GraphPhysicRulesCompositionImpl implements GraphPhysicsRules {
         for (MassiveMovableParticle particle : particles) {
             for (SingleParticleGenericPhysicRule singleParticleRule : singleParticleRules) {
                 Force f = singleParticleRule.computeForceComponent(particle);
-                forcesSummarized.merge(particle, f, (f1,f2) -> NewtonPhysics.sumOfForces(f1,f2));
+                forcesSummarized.merge(particle, f, NewtonPhysics::sumOfForces);
             }
         }
         //two particles
@@ -57,7 +55,7 @@ public class GraphPhysicRulesCompositionImpl implements GraphPhysicsRules {
 
     private static void mergeForcesMaps(Map<MassiveMovableParticle, Force> forcesSummarized, Map<MassiveMovableParticle, Force> forces) {
         forces.forEach((particle, force) -> {
-            forcesSummarized.merge(particle, force,  (f1, f2) -> NewtonPhysics.sumOfForces(f1, f2));
+            forcesSummarized.merge(particle, force, NewtonPhysics::sumOfForces);
         });
     }
 

@@ -26,7 +26,7 @@ class GraphControllerTest {
     void testSimulation() {
 //        String graphId = "sample-r120";
         String graphId = "sample-r120";
-        int iterations = 10;
+        int iterations = 100;
 
         Instant start = Instant.now();
 

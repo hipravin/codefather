@@ -1,25 +1,27 @@
 package com.hipravin.engine.classgraph.build;
 
 import com.hipravin.engine.classgraph.model.ClassGraph;
+import com.hipravin.engine.classgraph.model.ClassGraphNode;
 import com.hipravin.engine.classgraph.model.ClassNameAndPackage;
 import com.hipravin.engine.classgraph.model.ParsedMethodSignature;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.*;
 import java.util.regex.Pattern;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class BcelClassGraphBuilderTest {
     String jarName = "src/test/resources/chess-sample.jar";
+    String springJarName = "src/test/resources/spring-core-5.2.6.RELEASE.jar";
 
     @Test
     void testParseGraphChess() throws IOException {
         BcelClassGraphBuilder graphBuilder = new BcelClassGraphBuilder(Collections.singleton("org.springframework.boot"));
         ClassGraph classGraph = graphBuilder.build(jarName);
 
-        System.out.println("Node count " +  classGraph.getNodes().size());
+        System.out.println("Node count " + classGraph.getNodes().size());
 
         int toto = classGraph.getNodes().stream()
                 .flatMap(n1 -> n1.getLinks().keySet().stream())
@@ -30,6 +32,21 @@ class BcelClassGraphBuilderTest {
 
 
         System.out.println(classGraph);
+    }
+
+    @Test
+    void testSpringCoreJarGraph() throws IOException {
+        BcelClassGraphBuilder graphBuilder = new BcelClassGraphBuilder(Collections.singleton("org.springframework.boot"));
+        ClassGraph classGraph = graphBuilder.build(jarName);
+
+        Set<ClassGraphNode> nodesByComplexity = new TreeSet<>(
+                Comparator.comparingLong(ClassGraphNode::getCodeComplexity).reversed()
+                        .thenComparing(o -> o.getNameAndPackage().getClassName()));
+
+        nodesByComplexity.addAll(classGraph.getNodes());
+
+        System.out.println(nodesByComplexity.size());
+
     }
 
     @Test
