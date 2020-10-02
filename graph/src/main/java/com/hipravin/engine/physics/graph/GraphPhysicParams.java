@@ -23,7 +23,7 @@ public abstract class GraphPhysicParams {
     public static final double PAIRWISE_REPULSION_COEFF = 0.01 * 0.1;
 
     public static final double LINK_LEN = 0.05;//if distance is greater than this then linked particles are forced towards
-    public static final double LINK_GUK_COEFF = 50;
+    public static final double LINK_GUK_COEFF = 25;
 
     public static final double VISCOSITY_COEFF = 250;
 

@@ -15,7 +15,7 @@ class GraphNode extends React.Component {
             <g>
                 <rect id={rectid} x={this.props.x} y={this.props.y} width={this.props.viewparams.nodewidth * scale}
                       height={this.props.viewparams.nodeheight * scale} stroke="black"
-                      fill="transparent"
+                      fill="white"
                       strokeWidth="3"/>
                 <text x={this.props.x + this.props.viewparams.textshiftx} y={this.props.y + this.props.viewparams.textshifty}
                       className="small">{this.props.header}</text>

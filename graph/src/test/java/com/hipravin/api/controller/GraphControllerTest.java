@@ -24,6 +24,7 @@ class GraphControllerTest {
 
     @Test
     void testSimulation() {
+//        String graphId = "sample-r120";
         String graphId = "sample-r120";
         int iterations = 10;
 

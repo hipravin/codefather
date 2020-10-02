@@ -1,6 +1,9 @@
 package com.hipravin.engine;
 
 import com.hipravin.api.model.*;
+import com.hipravin.engine.classgraph.build.BcelClassGraphBuilder;
+import com.hipravin.engine.classgraph.mapping.ParametrizedClassGraphToGraphMapper;
+import com.hipravin.engine.classgraph.model.ClassGraph;
 import com.hipravin.engine.model.Graph;
 import com.hipravin.engine.model.GraphLink;
 import com.hipravin.engine.model.GraphNode;
@@ -8,7 +11,9 @@ import com.hipravin.engine.model.Metadata;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -35,8 +40,25 @@ public class GraphBuildService {
                 return buildRandom(100, 0.02);
             case "sample-r120":
                 return buildRandom(120, 0.02);
+            case "sample-chess":
+                return buildFromLocalJar("C:\\dev\\codefather\\graph\\src\\test\\resources\\chess-sample.jar");
+            case "sample-itself":
+                return buildFromLocalJar("C:\\dev\\codefather\\graph\\target\\graph.jar");
+            case "sample-spring-core":
+                return buildFromLocalJar("C:\\dev\\codefather\\graph\\src\\test\\resources\\spring-core-5.2.6.RELEASE.jar");
             default:
                 throw new GraphNotFoundException("Can't find sample graph definition for: " + id);
+        }
+    }
+
+    private Graph buildFromLocalJar(String path) {
+        BcelClassGraphBuilder graphBuilder = new BcelClassGraphBuilder(Collections.singleton("org.springframework.boot"));
+        try {
+            ClassGraph classGraph = graphBuilder.build(path);
+            return new ParametrizedClassGraphToGraphMapper().map(classGraph);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
         }
     }
 

@@ -11,5 +11,17 @@
 
     <artifactId>graph</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.bcel</groupId>
+            <artifactId>bcel</artifactId>
+            <version>6.5.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <finalName>graph</finalName>
+    </build>
+
 
 </project>

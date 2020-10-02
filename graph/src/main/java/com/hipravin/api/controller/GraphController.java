@@ -34,7 +34,6 @@ public class GraphController {
     @GetMapping("/sample")
     ResponseEntity<GraphDto> graphSample() {
         return ResponseEntity.ok(graphBuildService.sampleGraph());
-
     }
 
     @GetMapping("/{graphid}/simulation/{tick}")

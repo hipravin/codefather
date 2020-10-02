@@ -5,7 +5,6 @@ import com.hipravin.engine.physics.MassiveMovableParticle;
 import com.hipravin.engine.physics.NewtonPhysics;
 import com.hipravin.engine.physics.WeightedParticleLink;
 
-import java.util.Collection;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,15 +45,6 @@ public class GraphPhysicRulesCompositionImpl implements GraphPhysicsRules {
                 }
             }
         }
-//        for (MassiveMovableParticle particle1 : particles) {
-//            for (MassiveMovableParticle particle2 : particles) {
-//                if(particle1 != particle2) {
-//                    for (TwoParticleGenericPhysicRule twoParticlePhysicRule : twoParticlePhysicRules) {
-//                        mergeForcesMaps(forcesSummarized, twoParticlePhysicRule.computeForceComponents(particle1, particle2));
-//                    }
-//                }
-//            }
-//        }
         //link rules
         for (LinkedParticlesPhysicRule linkedParticlesRule : linkedParticlesRules) {
             for (WeightedParticleLink weightedParticleLink : links) {

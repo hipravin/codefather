@@ -20,12 +20,13 @@ class GraphSimulationServiceTest {
 
     @Test
     void testSimulate() {
-        String random100 = "sample-r100";
+        String graphId = "sample-chess";
+//        String random100 = "sample-r100";
         int iterations = 100;
 
         Instant start = Instant.now();
 
-        GraphPhysicSimulation simulation = graphSimulationService.buildSimulationById(random100);
+        GraphPhysicSimulation simulation = graphSimulationService.buildSimulationById(graphId);
 
         for (int tick = 0; tick < iterations; tick++) {
             GraphAnimationDto dto = graphSimulationService.advanceSimulationToTick(simulation, tick);
