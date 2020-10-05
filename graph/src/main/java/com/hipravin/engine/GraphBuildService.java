@@ -46,6 +46,9 @@ public class GraphBuildService {
                 return buildFromLocalJar("C:\\dev\\codefather\\graph\\target\\graph.jar");
             case "sample-spring-core":
                 return buildFromLocalJar("C:\\dev\\codefather\\graph\\src\\test\\resources\\spring-core-5.2.6.RELEASE.jar");
+            case "sample-spring-boot":
+                return buildSpringBoot(
+                        "C:\\Users\\Fduch\\.m2\\repository\\org\\springframework\\boot\\spring-boot\\2.3.3.RELEASE\\spring-boot-2.3.3.RELEASE.jar");
             default:
                 throw new GraphNotFoundException("Can't find sample graph definition for: " + id);
         }
@@ -53,6 +56,17 @@ public class GraphBuildService {
 
     private Graph buildFromLocalJar(String path) {
         BcelClassGraphBuilder graphBuilder = new BcelClassGraphBuilder(Collections.singleton("org.springframework.boot"));
+        try {
+            ClassGraph classGraph = graphBuilder.build(path);
+            return new ParametrizedClassGraphToGraphMapper().map(classGraph);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e.getMessage(), e);
+        }
+    }
+
+    private Graph buildSpringBoot(String path) {
+        BcelClassGraphBuilder graphBuilder = new BcelClassGraphBuilder(Collections.emptySet());
         try {
             ClassGraph classGraph = graphBuilder.build(path);
             return new ParametrizedClassGraphToGraphMapper().map(classGraph);

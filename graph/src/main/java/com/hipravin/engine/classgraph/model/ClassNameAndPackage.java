@@ -21,7 +21,8 @@ public class ClassNameAndPackage {
 
     public static ClassNameAndPackage fromSlashed(String slashed) {
         if (!slashed.contains("/")) {
-            throw new IllegalArgumentException(slashed + " is not slashed class representation");
+            return new ClassNameAndPackage(slashed, "nopackage");
+//            throw new IllegalArgumentException(slashed + " is not slashed class representation");
         }
 
         String[] vals = slashed.split("/");
